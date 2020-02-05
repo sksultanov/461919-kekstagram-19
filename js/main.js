@@ -11,6 +11,23 @@ var getRandomInt = function (min, max) {
 };
 var captionObject = [];
 var QUANTITY_PICTURE = 25;
+var maxLengthComments = 10;
+var createComment = function () {
+  return {
+    avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
+    mesage: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
+    name: NAMES[getRandomInt(0, NAMES.length - 1)],
+  };
+
+};
+var createRandomComments = function (randomNum) {
+  var array = [];
+  for (var i = 0; i < randomNum; i++) {
+    array.push(createComment());
+  }
+  return array;
+};
+
 var fillObject = function () {
 
   for (var i = 0; i < QUANTITY_PICTURE; i++) {
@@ -18,44 +35,8 @@ var fillObject = function () {
       url: 'photos/' + (i + 1) + '.jpg',
       description: 'Красивая фотография',
       likes: getRandomInt(15, 200),
-      comments: [
-        {
-          avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
-          mesage: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
-          name: NAMES[getRandomInt(0, NAMES.length - 1)],
-          quantityComments: getRandomInt(0, 6)
-        },
-        {
-          avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
-          mesage: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
-          name: NAMES[getRandomInt(0, NAMES.length - 1)],
-          quantityComments: getRandomInt(0, 6)
-        },
-        {
-          avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
-          mesage: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
-          name: NAMES[getRandomInt(0, NAMES.length - 1)],
-          quantityComments: getRandomInt(0, 6)
-        },
-        {
-          avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
-          mesage: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
-          name: NAMES[getRandomInt(0, NAMES.length - 1)],
-          quantityComments: getRandomInt(0, 6)
-        },
-        {
-          avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
-          mesage: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
-          name: NAMES[getRandomInt(0, NAMES.length - 1)],
-          quantityComments: getRandomInt(0, 6)
-        },
-        {
-          avatar: 'img/avatar-' + getRandomInt(1, 6) + '.svg',
-          mesage: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
-          name: NAMES[getRandomInt(0, NAMES.length - 1)],
-          quantityComments: getRandomInt(0, 6)
-        }
-      ]
+      comments: createRandomComments(getRandomInt(0, maxLengthComments))
+
     };
 
   }
@@ -63,10 +44,11 @@ var fillObject = function () {
 };
 fillObject();
 
+
 var renderPicture = function (picture) {
   var pictureElement = similarPictureTemplate.cloneNode(true);
 
-  pictureElement.querySelector('.picture__comments').textContent = picture.comments[getRandomInt(0, 5)].quantityComments;
+  pictureElement.querySelector('.picture__comments').textContent = picture.comments.length;
   pictureElement.querySelector('.picture__img').src = picture.url;
   pictureElement.querySelector('.picture__likes').textContent = picture.likes;
   return pictureElement;
