@@ -1,4 +1,8 @@
 'use strict';
+var COMMENT_LENGTH = 140;
+var HASHTAG_MIN_LENGTH = 2;
+var HASHTAG_MAX_LENGTH = 20;
+var HASHTAG_MAX_COUNT = 5;
 
 var similarListElement = document.querySelector('.pictures');
 
@@ -148,7 +152,124 @@ effectLevelPin.addEventListener('mousedown', function () {
   effectLevelValue.value = effectLevelPin.style.left;
 });
 
-var imgEffects = imgUploadOverlay.querySelector('.img-upload__effects');
+
+var effect = document.querySelector('.img-upload__effects');
+var blockPin = document.querySelector('.img-upload__effect-level');
+var pin = blockPin.querySelector('.effect-level__pin');
+var depth = blockPin.querySelector('.effect-level__depth');
+var image = document.querySelector('.img-upload__preview img');
 
 var pinEnd = 455 + 'px';
+pin.style.left = pinEnd;
+depth.style.width = pin.style.left;
+var currenEffect = 'none';
+effect.addEventListener('change', function (evt) {
+  var eff = evt.target.value;
+  image.classList.remove('effects__preview--' + currenEffect);
+  image.classList.add('effects__preview--' + eff);
+  currenEffect = eff;
+  if (currenEffect === 'none') {
+    blockPin.style.display = 'none';
+    image.style.filter = currenEffect;
+  } else {
+    blockPin.style.display = 'block';
+    pin.style.left = pinEnd;
+    depth.style.width = pin.style.left;
+    getEffects();
+  }
+});
 
+function getEffects() {
+  var num = parseInt(pin.style.left, 10) / 455;
+  if (currenEffect === 'chrome') {
+    image.style.filter = 'grayscale(' + num + ')';
+  } else if (currenEffect === 'sepia') {
+    image.style.filter = currenEffect + '(' + num + ')';
+  } else if (currenEffect === 'marvin') {
+    image.style.filter = 'invert(' + num * 100 + '%)';
+  } else if (currenEffect === 'phobos') {
+    image.style.filter = 'blur(' + num * 3 + 'px)';
+  } else if (currenEffect === 'heat') {
+    image.style.filter = 'brightness(' + num * 3 + ')';
+  }
+}
+
+
+var onHashtagsCheck = function (evt) {
+  var target = evt.target;
+
+  if (target.value === '') {
+    target.setCustomValidity('');
+  }
+
+
+  var noHash = false;
+  var invalidSymbols = false;
+  var minLength = false;
+  var maxLength = false;
+  var noRepeat = false;
+  var maxCount = false;
+  var hashtags = target.value.split(' ');
+  var customValidityString = '';
+
+  if (hashtags.length > HASHTAG_MAX_COUNT) {
+    maxCount = true;
+  }
+  for (var i = 0; i < hashtags.length; i++) {
+    if (hashtags[i][0] !== '#') {
+      noHash = true;
+    }
+
+    if (hashtags[i].length < HASHTAG_MIN_LENGTH) {
+      minLength = true;
+    }
+
+    if (hashtags[i].length > HASHTAG_MAX_LENGTH) {
+      maxLength = true;
+    }
+
+    var regExpr = /(^)([#a-zA-Zа-яА-Я\d]*$)/ig;
+    if (!regExpr.test(hashtags[i])) {
+      invalidSymbols = true;
+    }
+
+    for (var k = i + 1; k < hashtags.length; k++) {
+      if (hashtags[i].toLowerCase() === hashtags[k].toLowerCase()) {
+        noRepeat = true;
+      }
+    }
+  }
+
+  if (maxCount) {
+    customValidityString += 'Нельзя указывать более ' + HASHTAG_MAX_COUNT + ' хэштегов;   ';
+  }
+  if (noRepeat) {
+    customValidityString += 'Хэштеги не должны повторяться;   ';
+  }
+  if (maxLength) {
+    customValidityString += 'Максимальная длина хэштега не должна превышать ' + HASHTAG_MAX_LENGTH + ' символов;   ';
+  }
+  if (minLength) {
+    customValidityString += 'Минимальная длина хэштега составляет ' + HASHTAG_MIN_LENGTH + ' символа;   ';
+  }
+  if (noHash) {
+    customValidityString += 'Хэштег должен начинаться с символа "#";   ';
+  }
+  if (invalidSymbols) {
+    customValidityString += 'В хэштеге используются недопустимые символы;   ';
+  }
+
+  target.setCustomValidity(customValidityString);
+};
+
+var onCommentCheck = function (evt) {
+  var target = evt.target;
+  if (target.value.length > COMMENT_LENGTH) {
+    target.setCustomValidity('Длина комментария не должна превышать ' + COMMENT_LENGTH + ' символов');
+  } else {
+    target.setCustomValidity('');
+  }
+};
+
+hashtagsInput.addEventListener('input', onHashtagsCheck);
+commentInput.addEventListener('input', onCommentCheck);
