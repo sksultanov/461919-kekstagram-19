@@ -202,61 +202,34 @@ var onHashtagsCheck = function (evt) {
     target.setCustomValidity('');
   }
 
-
-  var noHash = false;
-  var invalidSymbols = false;
-  var minLength = false;
-  var maxLength = false;
-  var noRepeat = false;
-  var maxCount = false;
   var hashtags = target.value.split(' ');
   var customValidityString = '';
-
   if (hashtags.length > HASHTAG_MAX_COUNT) {
-    maxCount = true;
+    customValidityString += 'Нельзя указывать более ' + HASHTAG_MAX_COUNT + ' хэштегов;   ';
   }
   for (var i = 0; i < hashtags.length; i++) {
     if (hashtags[i][0] !== '#') {
-      noHash = true;
+      customValidityString += 'Хэштег должен начинаться с символа "#";   ';
     }
 
     if (hashtags[i].length < HASHTAG_MIN_LENGTH) {
-      minLength = true;
+      customValidityString += 'Минимальная длина хэштега составляет ' + HASHTAG_MIN_LENGTH + ' символа;   ';
     }
 
     if (hashtags[i].length > HASHTAG_MAX_LENGTH) {
-      maxLength = true;
+      customValidityString += 'Максимальная длина хэштега не должна превышать ' + HASHTAG_MAX_LENGTH + ' символов;   ';
     }
 
     var regExpr = /(^)([#a-zA-Zа-яА-Я\d]*$)/ig;
     if (!regExpr.test(hashtags[i])) {
-      invalidSymbols = true;
+      customValidityString += 'В хэштеге используются недопустимые символы;   ';
     }
 
     for (var k = i + 1; k < hashtags.length; k++) {
       if (hashtags[i].toLowerCase() === hashtags[k].toLowerCase()) {
-        noRepeat = true;
+        customValidityString += 'Хэштеги не должны повторяться;   ';
       }
     }
-  }
-
-  if (maxCount) {
-    customValidityString += 'Нельзя указывать более ' + HASHTAG_MAX_COUNT + ' хэштегов;   ';
-  }
-  if (noRepeat) {
-    customValidityString += 'Хэштеги не должны повторяться;   ';
-  }
-  if (maxLength) {
-    customValidityString += 'Максимальная длина хэштега не должна превышать ' + HASHTAG_MAX_LENGTH + ' символов;   ';
-  }
-  if (minLength) {
-    customValidityString += 'Минимальная длина хэштега составляет ' + HASHTAG_MIN_LENGTH + ' символа;   ';
-  }
-  if (noHash) {
-    customValidityString += 'Хэштег должен начинаться с символа "#";   ';
-  }
-  if (invalidSymbols) {
-    customValidityString += 'В хэштеге используются недопустимые символы;   ';
   }
 
   target.setCustomValidity(customValidityString);
@@ -270,6 +243,13 @@ var onCommentCheck = function (evt) {
     target.setCustomValidity('');
   }
 };
+var onInputValidate = function () {
+  hashtagsInput.value = hashtagsInput.value.toLowerCase();
+  // formSubmit.removeEventListener('submit', onInputValidate);
+};
 
+var formSubmit = document.querySelector('.img-upload__form');
 hashtagsInput.addEventListener('input', onHashtagsCheck);
 commentInput.addEventListener('input', onCommentCheck);
+formSubmit.addEventListener('submit', onInputValidate);
+
