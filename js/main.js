@@ -1,8 +1,4 @@
 'use strict';
-var COMMENT_LENGTH = 140;
-var HASHTAG_MIN_LENGTH = 2;
-var HASHTAG_MAX_LENGTH = 20;
-var HASHTAG_MAX_COUNT = 5;
 
 var similarListElement = document.querySelector('.pictures');
 
@@ -107,6 +103,7 @@ var LEVEL_MIN = 25;
 var LEVEL_DEFAULT = 100;
 var LEVEL_INC = 25;
 
+
 var previewPhoto = uploadPhotoForm.querySelector('.img-upload__preview');
 var levelButtonMinus = document.querySelector('.scale__control--smaller');
 var levelButtonPlus = document.querySelector('.scale__control--bigger');
@@ -158,6 +155,11 @@ var blockPin = document.querySelector('.img-upload__effect-level');
 var pin = blockPin.querySelector('.effect-level__pin');
 var depth = blockPin.querySelector('.effect-level__depth');
 var image = document.querySelector('.img-upload__preview img');
+
+var COMMENT_LENGTH = 140;
+var HASHTAG_MIN_LENGTH = 2;
+var HASHTAG_MAX_LENGTH = 20;
+var HASHTAG_MAX_COUNT = 5;
 
 var pinEnd = 455 + 'px';
 pin.style.left = pinEnd;
@@ -245,7 +247,7 @@ var onCommentCheck = function (evt) {
 };
 var onInputValidate = function () {
   hashtagsInput.value = hashtagsInput.value.toLowerCase();
-  // formSubmit.removeEventListener('submit', onInputValidate);
+  formSubmit.removeEventListener('submit', onInputValidate);
 };
 
 var formSubmit = document.querySelector('.img-upload__form');
