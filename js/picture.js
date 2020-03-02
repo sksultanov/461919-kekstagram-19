@@ -12,10 +12,12 @@
     pictureElement.querySelector('.picture__likes').textContent = picture.likes;
     return pictureElement;
   };
-
-  var fragment = document.createDocumentFragment();
-  for (var j = 0; j < window.data.length; j++) {
-    fragment.appendChild(renderPicture(window.data[j]));
-  }
-  similarListElement.appendChild(fragment);
+  var onSuccessPicture = function (picture) {
+    var fragment = document.createDocumentFragment();
+    for (var j = 0; j < picture.length; j++) {
+      fragment.appendChild(renderPicture(picture[j]));
+    }
+    similarListElement.appendChild(fragment);
+  };
+  window.backend.load(onSuccessPicture, window.utils.onLoadError);
 })();
